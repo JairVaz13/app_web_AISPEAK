@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import LlamadasCola from '../llamada_cola'
 import DetalleLlamada from '../detalles_llamada'
+import Perfil from '../perfil'
 import './Dashboard.css'
 
 function Dashboard({ onLogout }) {
@@ -8,6 +9,13 @@ function Dashboard({ onLogout }) {
   const [isOnHold, setIsOnHold] = useState(false)
   const [showQueue, setShowQueue] = useState(false)
   const [selectedCall, setSelectedCall] = useState(null)
+  const [showProfile, setShowProfile] = useState(false)
+
+  const userData = {
+    nombre: 'Aldo Laurel',
+    email: 'aldo.laurel@ispeak.com',
+    username: 'Aldo@25'
+  }
 
   // Simular el timer de la llamada
   useEffect(() => {
@@ -57,6 +65,11 @@ function Dashboard({ onLogout }) {
     }
   ]
 
+  // Si se muestra el perfil, renderizar ese componente
+  if (showProfile) {
+    return <Perfil userData={userData} onBack={() => setShowProfile(false)} />
+  }
+
   // Si se muestra el detalle de llamada, renderizar ese componente
   if (selectedCall) {
     return <DetalleLlamada callData={selectedCall} onBack={() => setSelectedCall(null)} />
@@ -80,7 +93,11 @@ function Dashboard({ onLogout }) {
         </div>
 
         <div className="call-center-card">
-          <div className="user-info">
+          <div 
+            className="user-info"
+            onClick={() => setShowProfile(true)}
+            style={{ cursor: 'pointer' }}
+          >
             <div className="profile-icon">👤</div>
             <div className="user-details">
               <div className="user-name">Aldo Laurel</div>
