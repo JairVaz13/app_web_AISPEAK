@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react'
+import LlamadasCola from '../llamada_cola'
+import DetalleLlamada from '../detalles_llamada'
 import './Dashboard.css'
 
 function Dashboard({ onLogout }) {
   const [callTime, setCallTime] = useState(0) // tiempo en segundos
   const [isOnHold, setIsOnHold] = useState(false)
+  const [showQueue, setShowQueue] = useState(false)
+  const [selectedCall, setSelectedCall] = useState(null)
 
   // Simular el timer de la llamada
   useEffect(() => {
@@ -21,10 +25,47 @@ function Dashboard({ onLogout }) {
   }
 
   const callHistory = [
-    { name: 'Ernesto Cruz', phone: '+52 55 265 0024', duration: '1:59' },
-    { name: 'María Pérez', phone: '+52 55 001 4725', duration: '3:59' },
-    { name: 'Juan Ortiz', phone: '+52 55 445 1026', duration: '2:20' }
+    { 
+      name: 'Ernesto Cruz', 
+      phone: '+52 55 265 0024', 
+      duration: '1:59',
+      usuario: 'Ernesto Cruz',
+      duracion: '00:01:59',
+      telefono: '55 265 0024',
+      fecha: '25/05/2005',
+      hora: '10:30:15 am'
+    },
+    { 
+      name: 'María Pérez', 
+      phone: '+52 55 001 4725', 
+      duration: '3:59',
+      usuario: 'María Pérez',
+      duracion: '00:03:59',
+      telefono: '55 001 4725',
+      fecha: '25/05/2005',
+      hora: '09:15:42 am'
+    },
+    { 
+      name: 'Juan Ortiz', 
+      phone: '+52 55 445 1026', 
+      duration: '2:20',
+      usuario: 'Juan Ortiz',
+      duracion: '00:02:20',
+      telefono: '55 445 1026',
+      fecha: '25/05/2005',
+      hora: '08:45:10 am'
+    }
   ]
+
+  // Si se muestra el detalle de llamada, renderizar ese componente
+  if (selectedCall) {
+    return <DetalleLlamada callData={selectedCall} onBack={() => setSelectedCall(null)} />
+  }
+
+  // Si se muestra la cola, renderizar ese componente
+  if (showQueue) {
+    return <LlamadasCola onBack={() => setShowQueue(false)} />
+  }
 
   return (
     <div className="dashboard-container">
@@ -111,7 +152,7 @@ function Dashboard({ onLogout }) {
           </div>
 
           <div className="queue-section">
-            <button className="queue-btn">
+            <button className="queue-btn" onClick={() => setShowQueue(true)}>
               Ver llamadas en cola
             </button>
           </div>
@@ -127,7 +168,12 @@ function Dashboard({ onLogout }) {
           <h2 className="section-title">Historial de llamadas</h2>
           <div className="history-list">
             {callHistory.map((call, index) => (
-              <div key={index} className="history-item">
+              <div 
+                key={index} 
+                className="history-item"
+                onClick={() => setSelectedCall(call)}
+                style={{ cursor: 'pointer' }}
+              >
                 <div className="profile-icon">👤</div>
                 <div className="history-details">
                   <div className="history-name">{call.name}</div>
